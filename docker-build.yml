@@ -1,0 +1,13 @@
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: build the executable
+    shell: CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' transmissionmanager.go
+
+  - name: Tag and push to local registry
+    become: True
+    docker_image:
+      path: ./
+      name: "{{ repo_uri }}:{{ repo_port }}/trmanager"
+      tag: 0.1.8
+      push: yes
